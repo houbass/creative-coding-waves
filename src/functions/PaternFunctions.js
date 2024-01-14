@@ -30,41 +30,52 @@ export function curvePatternFun(canvasSize ,yAxis, firstYShift, inputShifts, wei
 }
 
 
-
-
-
 // CREATE BETWEEN LAYERS
 export function createBetweenLayers(canvasSize, e, index, curveIputs, betweenWeight, betweenBites) {
 
     const thisValues = [];
+    const nextElement = curveIputs[index + 1];
 
-    const nextElement = curveIputs[index + 1]
     if(nextElement) {
 
+        // Y AXIS
+        const yAxisDelta = nextElement.yAxis - e.yAxis; 
+        const yAxis = yAxisDelta / betweenBites;
+
         // FIRST Y SHIFT
-        const yShiftDelta = nextElement.firstYShift - e.firstYShift
+        const yShiftDelta = nextElement.firstYShift - e.firstYShift;
         const yShift = yShiftDelta / betweenBites;
 
         // INPUT SHIFTS                
         const nextInputShifts = nextElement.inputShifts;
         const inputShiftsBites = nextInputShifts.map((item, shiftIndex) => {
             let thisInputShif = e.inputShifts[shiftIndex];
-
+            if(thisInputShif === undefined) {
+                thisInputShif = 0;
+            }
             const thisInputShiftBite = (item - thisInputShif) / betweenBites;
 
             return thisInputShiftBite;
-        })
+        });
 
         // CREATE BETWEEN LAYERS
         for(let i = 1; i < betweenBites; i++) {
             // FIRST Y SHIFT
             const thisShift = e.firstYShift + (yShift * i)
-            const someshit = e.inputShifts.map((inputShift, inputShiftIndex) => {
+            const yShifts = e.inputShifts.map((inputShift, inputShiftIndex) => {
+                let thisInput = inputShiftsBites[inputShiftIndex];
+                if(thisInput === undefined) {
+                    thisInput = 0;
+                }
+                //console.log(thisInput)
+                const thisYshift = inputShift + (thisInput * i);
 
-                return inputShift + (inputShiftsBites[inputShiftIndex] * i);
-            })
-            thisValues.push(curvePatternFun(canvasSize , e.yAxis, thisShift, someshit, betweenWeight));                              
-        }
+                return thisYshift;
+            });
+            const thisYAxis = e.yAxis + (yAxis * i)
+
+            thisValues.push(curvePatternFun(canvasSize , thisYAxis, thisShift, yShifts, betweenWeight));                              
+        };
     }
 
     return thisValues;

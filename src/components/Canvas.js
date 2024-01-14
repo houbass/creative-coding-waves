@@ -3,13 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 // FUNCTIONS
 import { bezierCurve} from "../functions/DrawingFunctions";
 import { curvePatternFun, createBetweenLayers } from "../functions/PaternFunctions";
+import { createRandomInputs } from "../functions/CreateRandomInputs";
 import { toRads, randomRange } from "../functions/HelpingFunctions";
 
-// INPUTS 
-import { canvasColor, v, curveIputs, mainWeigt, betweenWeight, betweenBites } from "../inputs/Inputs";
+// LIBRARIES
+import random from "canvas-sketch-util/random";
 
-//CANVAS SKETCH FUNKCE
-const random = require ('canvas-sketch-util/random')
+// INPUTS 
+import { 
+    canvasColor, v, curveIputs, mainWeigt, betweenWeight, 
+    betweenBites, trackersQuantity, trackerGap, randomInputsHandler,
+    randomQuantity, randomSegments 
+} from "../inputs/Inputs";
+
+
 
 export default function Canvas({ canvasRef, canvasSize, recHandler, images, animateHandler, drawHandler, reset }) {
 
@@ -56,27 +63,43 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                     context.fillStyle = canvasColor;
                     context.fillRect(0, 0, width, height);
                 }
-                
-                curvesPattern.forEach((curve, index) => {
-                    //let check = (Math.sin(toRads(opacity.current + (index * (180 / curvesPattern.length)))) + 1) / 2;
-                    let check = Math.cos(toRads(opacity.current + (index * (180 / curvesPattern.length))))
-                    //let check = Math.sin(random.noise2D(index, 0, 0.001 + (opacity.current /100000)) * 40); 
 
-                    if(check < 0) {
-                        check = 0;
-                    }
 
-                    //console.log(check)
-                    const thisOpacity = check / 2
+                // MOTION
+                //let checking = random.noise1D(opacity.current / 10000, 1, 1) * (curvesPattern.length - 1);
+                let checking = Math.sin(toRads(opacity.current / 100)) * (curvesPattern.length - 1);
+                //let checking = opacity.current;
 
-                    curve.forEach(e => {
-                        bezierCurve(context, e.start, e.cp1, e.cp2, e.end, thisOpacity, e.weight)
-                    })
+                if(checking < 0 ){
+                    checking *= -1;
+                }
+
+
+                // MAIN CURVES MOTION
+                const thisCurve = curvesPattern[Math.round(checking)];
+                thisCurve?.forEach((e, i) => {
+                    bezierCurve(context, e.start, e.cp1, e.cp2, e.end, 1, mainWeigt, "white")
                 })
 
-                // UPDATE EVERY FRAME
+                // TRACKING CURVES
+                for(let i = 1; i < trackersQuantity; i++) {
+                    let thisOpacity = 0.8 / i
+                    let thisGapIndex = Math.round(checking) - (i * trackerGap) + (curvesPattern.length - 1);
+                    const newArr = curvesPattern.concat(curvesPattern)
+                    const thisTracker = newArr[thisGapIndex]
+                    thisTracker?.forEach(e => {
+                        bezierCurve(context, e.start, e.cp1, e.cp2, e.end, thisOpacity, betweenWeight, "white")
+                    });
+                };      
+
+                // COUNT EVERY FRAME
                 opacity.current += v;
-            }
+
+                // REPEAT FRAMES
+                if(opacity.current >= curvesPattern.length - 1) {
+                    opacity.current = 0;
+                }; 
+            };
             drawing();
         };
         render();
@@ -85,34 +108,40 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
         return () => cancelAnimationFrame(timerHolder);
     });
 
-
     // CAPTURE IMAGES
     function imgCapture(canvas) {
         if(recHandler === true) {
             images.current=([
                 ...images.current, canvas.toDataURL("image/png", 1.0)
-            ])
-        }
-    }
-
+            ]);
+        };
+    };
 
     // GET CURVES
     useEffect(() => {
         const thisValues = [];
 
-        curveIputs.forEach((e, index) => {
+        let inputValues;
+        if(randomInputsHandler === true) {
+            inputValues = createRandomInputs(randomQuantity, canvasSize, randomSegments);
+        } else{
+            inputValues = curveIputs;
+        };
+
+        inputValues.forEach((e, index) => {
             // CREATE MAIN LAYERS
             thisValues.push(curvePatternFun(canvasSize , e.yAxis, e.firstYShift, e.inputShifts, mainWeigt));
 
             // CREATE BETWEEN LAYERS
-            const betweenLayers = createBetweenLayers(canvasSize, e, index, curveIputs, betweenWeight, betweenBites);
+            const betweenLayers = createBetweenLayers(canvasSize, e, index, inputValues, betweenWeight, betweenBites);
             betweenLayers.forEach(i => {
                 thisValues.push(i)
             });
         });
-
         setCurvesPattern(thisValues);
-    }, [canvasSize, reset]);
+
+        // eslint-disable-next-line
+    }, [canvasSize, reset, randomInputsHandler]);
 
 
     return (
@@ -124,7 +153,6 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
             flexDirection: "column",
             alignItems: "center",           
         }}>
-
             <canvas id="canvas" ref={canvasRef} height={canvasSize} width={canvasSize} />
         </div>
     )

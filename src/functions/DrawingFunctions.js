@@ -1,13 +1,16 @@
 
 
-export function bezierCurve(context, start, cp1, cp2, end, opacity, weight) {
+export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, color) {
 
     //console.log(start)
+
+    //const color = 255 / index
 
     context.save();
 
     // Cubic Bézier curve
-    context.strokeStyle = "white";
+    //context.strokeStyle = "white";
+    context.strokeStyle = color
     context.lineWidth = weight;
     context.beginPath();
     context.moveTo(start.x, start.y);
