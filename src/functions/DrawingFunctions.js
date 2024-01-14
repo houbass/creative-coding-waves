@@ -1,34 +1,14 @@
 
 
-
-// DRAW LINES
-export function drawLine(context, x, y ) {
-    context.save();
-    context.translate(x, y);
-    context.strokeStyle = "black";
-    //context.fillStyle = black;
-    context.lineWidth = 3;
-    context.beginPath();
-
-    context.moveTo(0, 0);
-    context.lineTo(100, 0);
-
-    context.closePath();
-    context.globalAlpha = 1;
-    //context.fill();
-    context.stroke();
-    context.restore();
-}
-
-export function bezierCurve(context, start, cp1, cp2, end, opacity) {
+export function bezierCurve(context, start, cp1, cp2, end, opacity, weight) {
 
     //console.log(start)
 
     context.save();
 
     // Cubic Bézier curve
-    context.strokeStyle = "black";
-    context.lineWidth = 2;
+    context.strokeStyle = "white";
+    context.lineWidth = weight;
     context.beginPath();
     context.moveTo(start.x, start.y);
     context.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);

@@ -1,93 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // FUNCTIONS
-import {drawLine, bezierCurve} from "./DrawingFunctions";
-import { curvePatternFun } from "./PaternFunctions";
-import { toRads, randomRange } from "./HelpingFunctions";
+import { bezierCurve} from "../functions/DrawingFunctions";
+import { curvePatternFun, createBetweenLayers } from "../functions/PaternFunctions";
+import { toRads, randomRange } from "../functions/HelpingFunctions";
+
+// INPUTS 
+import { canvasColor, v, curveIputs, mainWeigt, betweenWeight, betweenBites } from "../inputs/Inputs";
 
 //CANVAS SKETCH FUNKCE
 const random = require ('canvas-sketch-util/random')
 
-export default function Canvas({ canvasRef, canvasSize, recHandler, images, animateHandler, drawHandler, presset, reset }) {
+export default function Canvas({ canvasRef, canvasSize, recHandler, images, animateHandler, drawHandler, reset }) {
 
     // REFS 
-    const angle = useRef(0);
-    const v = useRef(0);
-
     const opacity = useRef(0);
-    const opacity2 = useRef([0, 0, 0, 0])
 
     // STATES
     const [curvesPattern, setCurvesPattern] = useState([]);
-
-    // PATTERN INPUTS
-    const canvasColor = "rgb(255, 120, 90)";
-
-    // ORBITS SETTINGS
-    /*
-    const curveIputs = [
-        {
-            yAxis: 500,
-            firstYShift: 0,
-            inputShifts: [0, 0, 0]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 10,
-            inputShifts: [0, 0, 0]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 20,
-            inputShifts: [0, 0, 0]
-        },
-    ]
-    */
-
-    
-    const curveIputs = [
-        {
-            yAxis: 500,
-            firstYShift: 0,
-            inputShifts: [-150, -300, -300]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 0,
-            inputShifts: [-130, -350, -300]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 150,
-            inputShifts: [-100, -450, -300]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 200,
-            inputShifts: [-50, -550, -300]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 200,
-            inputShifts: [-80, -550, -350]
-        },
-        {
-            yAxis: 500,
-            firstYShift: 200,
-            inputShifts: [-100, -550, -450]
-        },
-    ];
-    
-
-    // GET CURVES
-    useEffect(() => {
-        const thisValus = [];
-        curveIputs.forEach(e => {
-            thisValus.push(curvePatternFun(canvasSize , e.yAxis, e.firstYShift, e.inputShifts))
-        })
-        setCurvesPattern(thisValus)
-    }, [canvasSize])
-
 
     //ANIMATION IS RUNING HERE
     useEffect(() => {
@@ -127,27 +57,10 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                     context.fillRect(0, 0, width, height);
                 }
                 
-                // UPDATING ANGLE
-                //angle.current += 1;                
-
-                // LINES  
-                //let lineV = 1;     
-                if(angle.current > width){
-                    v.current = -10;
-                }else if(angle.current <= 0){
-                    v.current = 10;
-                }
-                angle.current += v.current; 
-
-                drawLine(context, 100 + angle.current, 200)            
-                drawLine(context, 200 - angle.current, 500)             
-                
-
-
-
                 curvesPattern.forEach((curve, index) => {
                     //let check = (Math.sin(toRads(opacity.current + (index * (180 / curvesPattern.length)))) + 1) / 2;
-                    let check = Math.sin(toRads(opacity.current + (index * (180 / curvesPattern.length))))    
+                    let check = Math.cos(toRads(opacity.current + (index * (180 / curvesPattern.length))))
+                    //let check = Math.sin(random.noise2D(index, 0, 0.001 + (opacity.current /100000)) * 40); 
 
                     if(check < 0) {
                         check = 0;
@@ -157,13 +70,12 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                     const thisOpacity = check / 2
 
                     curve.forEach(e => {
-                        bezierCurve(context, e.start, e.cp1, e.cp2, e.end, thisOpacity)
+                        bezierCurve(context, e.start, e.cp1, e.cp2, e.end, thisOpacity, e.weight)
                     })
                 })
 
-                opacity.current += 3;
-
-
+                // UPDATE EVERY FRAME
+                opacity.current += v;
             }
             drawing();
         };
@@ -172,7 +84,6 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
         //animation cancel when re-render component
         return () => cancelAnimationFrame(timerHolder);
     });
-
 
 
     // CAPTURE IMAGES
@@ -184,12 +95,25 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
         }
     }
 
-    // ON START / RESET / CANVAS SIZE
-    useEffect(() => {
-        //angle.current = 0;
 
-        // eslint-disable-next-line
-    }, [reset, canvasSize])
+    // GET CURVES
+    useEffect(() => {
+        const thisValues = [];
+
+        curveIputs.forEach((e, index) => {
+            // CREATE MAIN LAYERS
+            thisValues.push(curvePatternFun(canvasSize , e.yAxis, e.firstYShift, e.inputShifts, mainWeigt));
+
+            // CREATE BETWEEN LAYERS
+            const betweenLayers = createBetweenLayers(canvasSize, e, index, curveIputs, betweenWeight, betweenBites);
+            betweenLayers.forEach(i => {
+                thisValues.push(i)
+            });
+        });
+
+        setCurvesPattern(thisValues);
+    }, [canvasSize, reset]);
+
 
     return (
         <div 

@@ -6,8 +6,7 @@ import AnimationSettings from './AnimationSettings';
 export default function Ui({ 
     setCanvasSize, recHandler, setRecHandler, 
     images, animateHandler, setAnimateHandler, 
-    drawHandler, setDrawHandler, setPresset, 
-    reset, setReset
+    drawHandler, setDrawHandler, reset, setReset
     }) {
 
     return(
@@ -33,7 +32,6 @@ export default function Ui({
                 setAnimateHandler={setAnimateHandler} 
                 drawHandler={drawHandler} 
                 setDrawHandler={setDrawHandler} 
-                setPresset={setPresset} 
                 reset={reset}
                 setReset={setReset}
             />

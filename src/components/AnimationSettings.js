@@ -1,7 +1,7 @@
 
 
 
-export default function AnimationSettings({ animateHandler, setAnimateHandler, drawHandler, setDrawHandler, setPresset, reset, setReset }) {
+export default function AnimationSettings({ animateHandler, setAnimateHandler, drawHandler, setDrawHandler, reset, setReset }) {
 
     return(
         <div 
@@ -17,14 +17,6 @@ export default function AnimationSettings({ animateHandler, setAnimateHandler, d
             <button 
             onClick={() => setDrawHandler(!drawHandler)}
             >draw on/off</button>
-
-            <select onChange={(e) => {
-                setPresset(e.target.value);
-                setReset(!reset);
-                }}>
-                <option>normal</option>
-                <option>incoming</option>
-            </select>
 
             <button 
             onClick={() => setReset(!reset)}

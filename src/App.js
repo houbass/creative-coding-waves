@@ -20,7 +20,6 @@ function App() {
   // annimation settings states
   const [animateHandler, setAnimateHandler] = useState(true);
   const [drawHandler, setDrawHandler] = useState(false);
-  const [presset, setPresset] = useState("normal");
   const [reset, setReset] = useState(true);
   
   return (
@@ -35,7 +34,6 @@ function App() {
         setAnimateHandler={setAnimateHandler}
         drawHandler={drawHandler}
         setDrawHandler={setDrawHandler} 
-        setPresset={setPresset} 
         reset={reset}
         setReset={setReset}
       />
@@ -47,7 +45,6 @@ function App() {
       images={images}
       animateHandler={animateHandler}
       drawHandler={drawHandler}
-      presset={presset} 
       reset={reset}
       />
 
