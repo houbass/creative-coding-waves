@@ -83,7 +83,7 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 
 
                 for(let i = 0; i < quantity; i++) {
-                    console.log(i)
+                    //console.log(i)
                     
                     const halfHeight = width / 2
                     const thisWidth = width / quantity;
