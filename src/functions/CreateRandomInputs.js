@@ -18,7 +18,8 @@ export function createRandomInputs(quantity, canvasSize, segments) {
 
         // NEW INPUT
         const thisRandomInputs = {
-            yAxis: randomRange(halfScreen - 200, halfScreen + 200),
+            //yAxis: randomRange(halfScreen - 200, halfScreen + 200),
+            yAxis: halfScreen,
             firstYShift: randomRange(halfScreen * -1, halfScreen),
             inputShifts: thisSegments
         };

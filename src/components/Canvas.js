@@ -65,6 +65,50 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 }
 
 
+                opacity.current += 1
+
+                const yMotionDelta = 50
+                const yMotion = Math.sin(toRads(opacity.current * 1)) * yMotionDelta;
+
+                const xMotion = 0
+                const xMotion2 = yMotion
+                const yMove = Math.cos(toRads(opacity.current * 1)) * (yMotionDelta);
+
+                //const yMove = opacity.current * 5
+                //console.log(yMotion)
+                const quantity = 2;
+                //bezierCurve(context, {x: 0, y: 500 }, {x: 250, y: 500 }, {x: 250, y: 500 + yMotion }, {x: 500, y: 500 + (yMotion)}, 1, 2, "white", yMove)
+                //bezierCurve(context, {x: 500, y: 500 + yMotion }, {x: 750, y: 500 + yMotion }, {x: 750, y: 500}, {x: 1000, y: 500}, 1, 2, "white", yMove)
+
+                
+
+                for(let i = 0; i < quantity; i++) {
+                    console.log(i)
+                    
+                    const halfHeight = width / 2
+                    const thisWidth = width / quantity;
+                    const thisHalfWidth = thisWidth / 2;
+                    //bezierCurve(context, {x: 0, y: 500 }, {x: 250, y: 500 }, {x: 250, y: 500 + yMotion }, {x: 500, y: 500 + (yMotion)}, 1, 2, "white", yMove)
+                    bezierCurve(
+                        context, 
+                        {x: i * thisWidth, y: 500 }, 
+                        {x: (i * thisWidth) +  (thisHalfWidth / 2), y: 500 }, 
+                        {x: (i * thisWidth) +  (thisHalfWidth / 2), y: 500 + yMotion }, 
+                        {x: (i * thisWidth) + (thisWidth / 2), y: 500 + (yMotion)}, 
+                        1, 2, "white", yMove
+                        )
+
+                    bezierCurve(
+                        context, 
+                        {x: (i * thisWidth) + (thisWidth / 2), y: halfHeight + yMotion }, 
+                        {x: (i * thisWidth) + (thisWidth / 2) + (thisHalfWidth / 2), y: halfHeight + yMotion }, 
+                        {x: (i * thisWidth) + (thisWidth / 2) + (thisHalfWidth / 2), y: halfHeight}, 
+                        {x: (i * thisWidth) + (thisWidth), y: halfHeight}, 
+                        1, 2, "white", yMove
+                        )
+                }
+
+                /*
                 // MOTION
                 //let checking = random.noise1D(opacity.current / 10000, 1, 1) * (curvesPattern.length - 1);
                 let checking = Math.sin(toRads(opacity.current / 100)) * (curvesPattern.length - 1);
@@ -74,12 +118,13 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                     checking *= -1;
                 }
 
-
+                
                 // MAIN CURVES MOTION
                 const thisCurve = curvesPattern[Math.round(checking)];
                 thisCurve?.forEach((e, i) => {
                     bezierCurve(context, e.start, e.cp1, e.cp2, e.end, 1, mainWeigt, "white")
                 })
+                
 
                 // TRACKING CURVES
                 for(let i = 1; i < trackersQuantity; i++) {
@@ -92,6 +137,8 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                     });
                 };      
 
+                
+
                 // COUNT EVERY FRAME
                 opacity.current += v;
 
@@ -99,6 +146,7 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 if(opacity.current >= curvesPattern.length - 1) {
                     opacity.current = 0;
                 }; 
+                */
             };
             drawing();
         };
@@ -132,11 +180,12 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
             // CREATE MAIN LAYERS
             thisValues.push(curvePatternFun(canvasSize , e.yAxis, e.firstYShift, e.inputShifts, mainWeigt));
 
-            // CREATE BETWEEN LAYERS
+            // CREATE BETWEEN LAYERS     
             const betweenLayers = createBetweenLayers(canvasSize, e, index, inputValues, betweenWeight, betweenBites);
             betweenLayers.forEach(i => {
                 thisValues.push(i)
             });
+            
         });
         setCurvesPattern(thisValues);
 

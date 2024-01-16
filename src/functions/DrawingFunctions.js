@@ -1,6 +1,6 @@
 
 
-export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, color) {
+export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, color, yMove) {
 
     //console.log(start)
 
@@ -13,6 +13,7 @@ export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, colo
     context.strokeStyle = color
     context.lineWidth = weight;
     context.beginPath();
+    context.translate(0, yMove);
     context.moveTo(start.x, start.y);
     context.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
     context.globalAlpha = opacity;
