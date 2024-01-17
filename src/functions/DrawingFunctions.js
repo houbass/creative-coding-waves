@@ -20,7 +20,7 @@ export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, colo
     context.stroke();
     context.restore();
 
-    /*
+    
     // Start and end points
     context.fillStyle = "blue";
     context.beginPath();
@@ -34,5 +34,5 @@ export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, colo
     context.arc(cp1.x, cp1.y, 5, 0, 2 * Math.PI); // Control point one
     context.arc(cp2.x, cp2.y, 5, 0, 2 * Math.PI); // Control point two
     context.fill();
-    */
+    
 }

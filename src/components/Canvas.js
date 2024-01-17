@@ -67,6 +67,70 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
 
                 opacity.current += 1
 
+
+                const rectQuant = 50;
+                const rectRange = 200;
+                const rectInputs = {
+                    bites: width / rectQuant,
+
+                }
+
+            
+            
+                for(let i = 0; i < rectQuant; i++) { 
+
+                    const thisY = Math.sin(toRads((i * 80) + opacity.current)) * rectRange ;
+                    const thisYX = Math.cos(toRads((i * 80) + opacity.current)) * rectRange ;
+
+                    context.save();
+                    context.beginPath();
+                    //context.translate(rectInputs.bites * i, 500 + thisY);
+                    context.moveTo(rectInputs.bites * i, 500 + thisY);   
+                    context.lineTo(rectInputs.bites * i, 500 + thisYX);
+
+
+                    context.fillStyle = "orange";
+                    context.strokeStyle = "white";
+                    context.lineWidth = 5;
+                    context.stroke();
+                    //context.fillRect(0, 0, rectInputs.bites, rectInputs.bites);
+                    context.restore();
+                }
+                
+                for(let i = 0; i < 50; i++) { 
+
+                    const thisY = Math.sin(toRads((i / 2) + opacity.current)) * rectRange ;
+                    const thisYX = Math.cos(toRads((i / 2) + opacity.current)) * rectRange ;
+
+                    context.save();
+                    context.beginPath();
+                    //context.translate(rectInputs.bites * i, 500 + thisY);
+                    context.moveTo(rectInputs.bites * i, 500 + thisY);   
+                    context.lineTo(rectInputs.bites * i, 500 + thisYX);
+
+
+                    context.fillStyle = "orange";
+                    context.strokeStyle = "white";
+                    context.lineWidth = 5;
+                    context.stroke();
+                    //context.fillRect(0, 0, rectInputs.bites, rectInputs.bites);
+                    context.restore();
+                }
+
+                /*
+                const thisY = Math.sin(toRads((0 * 2) + opacity.current)) * rectRange;
+                const thisY2 = Math.sin(toRads((50 * 2) + opacity.current)) * rectRange;
+                const thisY3 = Math.sin(toRads((50 / 3 * 2) + opacity.current)) * rectRange;
+                const thisY4 = Math.sin(toRads((50 / 3 * 2 * 2) + opacity.current)) * rectRange;
+                bezierCurve(context, {x: 0, y: 500 + thisY }, {x: 500 / 3, y: 500 + (thisY3 * 1) }, {x: 500 / 3 * 2, y: 500 + thisY4 }, {x: 1000 / 2, y: 500 + thisY2 }, 1, 2, "white", 0)
+                
+                
+                const thisY5 = Math.sin(toRads((100 * 2) + opacity.current)) * rectRange;
+                const thisY6 = Math.sin(toRads(((50 / 3 + 50) * 2) + opacity.current)) * rectRange;
+                const thisY7 = Math.sin(toRads(((50 / 3 * 2 + 50) * 2) + opacity.current)) * rectRange;
+                bezierCurve(context, {x: 500, y: 500 + thisY2 }, {x: (500 / 3) + 500, y: 500 + (thisY6) }, {x: (500 / 3 * 2) + 500 , y: 500 + (thisY7) }, {x: 1000 , y: 500 + thisY5 }, 1, 2, "white", 0)
+                */
+
                 const yMotionDelta = 50
                 const yMotion = Math.sin(toRads(opacity.current * 1)) * yMotionDelta;
 
@@ -81,7 +145,7 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 //bezierCurve(context, {x: 500, y: 500 + yMotion }, {x: 750, y: 500 + yMotion }, {x: 750, y: 500}, {x: 1000, y: 500}, 1, 2, "white", yMove)
 
                 
-
+                /*
                 for(let i = 0; i < quantity; i++) {
                     //console.log(i)
                     
@@ -107,6 +171,7 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                         1, 2, "white", yMove
                         )
                 }
+                */
 
                 /*
                 // MOTION
