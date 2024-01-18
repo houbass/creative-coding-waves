@@ -62,13 +62,12 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 opacity.current += 1;
 
                 // FIRST MOTION
-                const wavesYmotion = (canvasSize / 2) + (random.noise1D(opacity.current, 1 / 100, 200));
+                const wavesYmotion = (canvasSize / 2) + (random.noise1D(opacity.current , 1 / 50, 200));
                 waveElements.current.push(wavesYmotion);
 
                 // SECOND MOTION
-                const wavesYmotion2 = (canvasSize / 2) + (random.noise1D(opacity.current, 1 / 50, 100));
+                const wavesYmotion2 = (canvasSize / 2) + (random.noise1D(opacity.current, 1 / 100, 100));
                 waveElements2.current.push(wavesYmotion2);
-
 
                 // CURVE SETTING
                 const gap = 5;
@@ -81,16 +80,11 @@ export default function Canvas({ canvasRef, canvasSize, recHandler, images, anim
                 // DRAW WAVE
                 //drawWave(context, 40, -40, reversedEl, gap, getAngle, "orange", 5);
                 //drawWave(context, 10, -20, reversedEl2, gap, getAngle, "rgb(225, 35, 105)", 5);
-                //drawWave(context, 0, 0, reversedEl, gap, getAngle, "white", 5);
-                //drawLines(context, reversedEl, gap, "white", 4, 30);
-
-                
-                const quantity = 10;
-                for(let i = 0; i < quantity; i++) {
-                    const colors = ["purple", "red", "white", "orange", "lightblue"];
-                    const thisColor = colors[i];
-                    drawWave(context, i * 20 * -1, i * 30, reversedEl, gap, getAngle, "white", 5 );
-                }
+                drawWave(context, 0, -250, reversedEl, gap, getAngle, "rgb(225, 30 ,90)", 1);
+                drawWave(context, 0, 250, reversedEl, gap, getAngle, "rgb(225, 30 ,90)", 1);
+                drawWave(context, 0, 0, reversedEl, gap, getAngle, "white", 5);
+                drawLines(context, reversedEl, gap, "white", 5, 60);
+                drawWave(context, 60, 0, reversedEl, gap, getAngle, "white", 5);
                 
             };
             drawing();
