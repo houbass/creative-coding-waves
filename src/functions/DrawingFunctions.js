@@ -1,38 +1,30 @@
 
+import { toRads, randomRange } from "../functions/HelpingFunctions";
 
-export function bezierCurve(context, start, cp1, cp2, end, opacity, weight, color, yMove) {
+export function drawDna(context, width, motion, quantity, range, lineWidth, arcR, color, yShift) {        
+    for(let i = 1; i < quantity; i++) { 
+        const bites = width / quantity;
+        const thisY1 = (Math.sin(toRads((i * 6) + motion)) * range ) + yShift;
+        const thisY2 = (Math.cos(toRads((i * 6) + motion)) * range) + yShift ;
+        const x = bites * i;
+        const y1 = (width / 2) + thisY1;
+        const y2 = (width / 2) + thisY2;
 
-    //console.log(start)
-
-    //const color = 255 / index
-
-    context.save();
-
-    // Cubic Bézier curve
-    //context.strokeStyle = "white";
-    context.strokeStyle = color
-    context.lineWidth = weight;
-    context.beginPath();
-    context.translate(0, yMove);
-    context.moveTo(start.x, start.y);
-    context.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
-    context.globalAlpha = opacity;
-    context.stroke();
-    context.restore();
-
-    
-    // Start and end points
-    context.fillStyle = "blue";
-    context.beginPath();
-    context.arc(start.x, start.y, 5, 0, 2 * Math.PI); // Start point
-    context.arc(end.x, end.y, 5, 0, 2 * Math.PI); // End point
-    context.fill();
-
-    // Control points
-    context.fillStyle = "red";
-    context.beginPath();
-    context.arc(cp1.x, cp1.y, 5, 0, 2 * Math.PI); // Control point one
-    context.arc(cp2.x, cp2.y, 5, 0, 2 * Math.PI); // Control point two
-    context.fill();
-    
+        context.save();
+        context.beginPath();
+        context.moveTo(x, y1);   
+        context.lineTo(x, y2);
+        context.strokeStyle = color;
+        context.lineWidth = lineWidth;
+        context.stroke();
+        context.restore();
+        
+        context.save();
+        context.beginPath();
+        context.fillStyle = color;
+        context.arc(x, y1, arcR, 0, Math.PI * 2);
+        context.arc(x, y2, arcR, 0, Math.PI * 2);
+        context.fill();
+        context.restore();
+    }
 }
